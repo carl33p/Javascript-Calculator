@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
+        Remove this if you use the .htaccess -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <title>Javascript Calculator</title>
+        <meta name="description" content="" />
+        <meta name="author" content="carl33p" />
+        <meta name="viewport" content="width=device-width; initial-scale=1.0" />
+        <!-- Replace favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <style>
+        	input, p{
+        		font-size: 1.2em;
+        		box-shadow:0 0 5px #666;
+        	}
+        	#result-Container{
+        		background-color: #CCFFFF;
+        		border:1px solid black;
+        		padding:10px;
+        		width:200px;
+        		height:25px;
+        	}
+        </style>
+    </head>
+    <body>
+        <div>
+            <header>
+                <h1>Javascript Calculator</h1>
+            </header>
+            <nav>
+
+            </nav>
+            <div>
+                <form>
+                <input type="text" id="user_input" name="user_input" size="15" maxlength="15" />
+                <input type="button" value="x" id="multiply" onClick="operator(id);" />
+                <input type="button" value="+" id="add" onClick="operator(id);" />
+                <input type="button" value="-" id="subtract" onclick="operator(id);" />
+                <input type="button" value="/" id="divide" onclick="operator(id);" /><br />
+                <input type="button" value="=" id="equal" onclick="operator(id);" />
+                <p id="result-Container"><span id="result"></span></p>
+                </form>
+
+            </div>
+            <footer>
+                    <span>&copy; By Carl Perry</span>
+            </footer>
+        </div>
+<script type="text/javascript">
+         	var equation = new Array();
+         	equation["op"] = 0;
+            var result ="";
+        function calculate(input){
+        	switch(equation["op"]){
+                case "multiply":
+                    result = equation["value1"] * input;
+                    break;
+                case "add":
+                    result = equation["value1"] + input;
+                    break;
+                case "subtract":
+                    result = equation["value1"] - input;
+                    break;
+                case "divide":
+                    result = equation["value1"] / input;
+                    break;
+                default:
+                	result = "Error: "+equation["op"];
+                	break;
+            }
+            	
+            	var result_integer_string = result.toFixed()+'';
+            	var result_length = result_integer_string.length;
+				
+				//Round to 10 decimal places
+            	return Math.round(result*10000000000)/10000000000;
+        }
+        function operator(op){
+        	var input = document.getElementById('user_input').value;
+        	if(input){
+	        	input = parseFloat(input);
+	        	if(equation["op"])
+					equation["value1"] = calculate(input);
+				else
+					equation["value1"] = input;
+	           
+	            document.getElementById('result').innerHTML = equation["value1"];
+	            document.getElementById('user_input').value = "";
+	            document.getElementById('user_input').focus();
+           }
+            
+            if(op=="equal")
+				equation["op"]=false;
+			else
+            	equation["op"] = op;
+			
+			
+            return false;
+        }
+        
+</script>
+    </body>
+</html>
