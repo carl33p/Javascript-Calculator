@@ -24,6 +24,9 @@
         		width:200px;
         		height:25px;
         	}
+        	.highlight{
+        		background:yellow;
+        	}
         </style>
     </head>
     <body>
@@ -37,11 +40,11 @@
             <div>
                 <form>
                 <input type="text" id="user_input" name="user_input" size="15" maxlength="15" />
-                <input type="button" value="x" id="multiply" onClick="operator(id);" />
-                <input type="button" value="+" id="add" onClick="operator(id);" />
-                <input type="button" value="-" id="subtract" onclick="operator(id);" />
-                <input type="button" value="/" id="divide" onclick="operator(id);" /><br />
-                <input type="button" value="=" id="equal" onclick="operator(id);" />
+                <input type="button" value="*" onClick="operator(value);" />
+                <input type="button" value="+" onClick="operator(value);" />
+                <input type="button" value="-" onclick="operator(value);" />
+                <input type="button" value="/" onclick="operator(value);" /><br />
+                <input type="button" value="=" onclick="operator(value);" />
                 <p id="result-Container"><span id="result"></span></p>
                 </form>
 
@@ -67,20 +70,19 @@
         </div>
 <script type="text/javascript">
          	var equation = new Array();
-         	equation["op"] = 0;
             var result ="";
         function calculate(input){
         	switch(equation["op"]){
-                case "multiply":
+                case "*":
                     result = equation["value1"] * input;
                     break;
-                case "add":
+                case "+":
                     result = equation["value1"] + input;
                     break;
-                case "subtract":
+                case "-":
                     result = equation["value1"] - input;
                     break;
-                case "divide":
+                case "/":
                     result = equation["value1"] / input;
                     break;
                 default:
@@ -88,38 +90,74 @@
                 	break;
             }
             	
-            	var result_integer_string = result.toFixed()+'';
-            	var result_length = result_integer_string.length;
+            	//var result_integer_string = result.toFixed()+'';
+            	//var result_length = result_integer_string.length;
 				
-				//Round to 10 decimal places
-            	return Math.round(result*10000000000)/10000000000;
+			//Round to 10 decimal places
+            return Math.round(result*10000000000)/10000000000;
         }
         function operator(op){
+        	//Get the user input
         	var input = document.getElementById('user_input').value;
+        	
+        	//Validate the input
+        	if(!validate(input)){
+        		
+        		//Clear user input
+        		document.getElementById('user_input').value = "";
+        		//Hightlight the input box, signaling incorrect input
+        		document.getElementById('user_input').className += "highlight";
+        		//Set the cursor to the user input textbox
+	            document.getElementById('user_input').focus();
+        		
+        		if(equation["op"])
+        			document.getElementById('result').innerHTML = equation["value1"]+equation["op"];
+        		else
+        			document.getElementById('result').innerHTML = "Error";
+        		
+        		//Stops further actions from occurring
+        		return false;	
+        	}
+        	
+        	//Remove highlight class if present
+        	document.getElementById('user_input').className = "";
+        	
+        	//Store the input and calculate the result
         	if(input){
+        		//Explicitly make the input a number, rather than a string
 	        	input = parseFloat(input);
+	        	//If the operator was set from previous input, a calculation will need to occur
 	        	if(equation["op"])
 					equation["value1"] = calculate(input);
+				//Otherwise, just save the input
 				else
 					equation["value1"] = input;
-	           
-	            document.getElementById('result').innerHTML = equation["value1"];
-	            document.getElementById('user_input').value = "";
-	            document.getElementById('user_input').focus();
            }
+           
+           	//Display the result
+	        document.getElementById('result').innerHTML = equation["value1"];
+	        //Clear the user input
+	        document.getElementById('user_input').value = "";
+	        //Set the cursor to the user input textbox
+	        document.getElementById('user_input').focus();
             
-            if(op=="equal")
+            //Set the operator field as blank
+            if(op=="=")
 				equation["op"]=false;
+			//Save the operator
 			else
             	equation["op"] = op;
-			
-			
-            return false;
         }
         
+        //Concatenate the number to the user_input text field value
         function dialpad(num){
         	document.getElementById('user_input').value += num;
-        	
+        }
+        
+        //Validate that the input is a number
+        function validate(input){
+        	var regex = /^(\-)?\d*(\.)?\d*$/
+        	return regex.test(input);
         }
         
 </script>
